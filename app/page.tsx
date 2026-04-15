@@ -9,12 +9,13 @@ export default function Home() {
     <>
       <Hero />
 
-      <section id="work" className="py-24 px-6 border-t border-border">
+      {/* Projects — white bg */}
+      <section id="work" className="py-24 px-6 bg-card">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-[1fr_2fr] gap-16 mb-12">
+          <div className="grid md:grid-cols-[1fr_2fr] gap-16 mb-4">
             <div>
               <h2 className="text-2xl font-bold mb-2">Проекты</h2>
-              <p className="text-sm text-muted">{cases.length} кейсов</p>
+              <p className="text-sm text-muted font-light">{cases.length} кейсов</p>
             </div>
           </div>
 
@@ -26,7 +27,10 @@ export default function Home() {
         </div>
       </section>
 
+      {/* About — dark bg */}
       <About />
+
+      {/* Skills — surface bg */}
       <Skills />
     </>
   );
