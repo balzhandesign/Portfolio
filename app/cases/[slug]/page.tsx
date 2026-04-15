@@ -21,50 +21,6 @@ export async function generateMetadata({
   };
 }
 
-function SectionBlock({
-  label,
-  title,
-  items,
-  variant = "default",
-}: {
-  label: string;
-  title: string;
-  items: string[];
-  variant?: "default" | "dark" | "surface";
-}) {
-  const bg = variant === "dark"
-    ? "bg-dark text-dark-text"
-    : variant === "surface"
-    ? "bg-surface"
-    : "bg-card";
-
-  const mutedColor = variant === "dark" ? "text-dark-text/50" : "text-muted";
-  const labelColor = variant === "dark" ? "text-dark-text/20" : "text-muted/25";
-
-  return (
-    <div className={`${bg} px-6 py-16`}>
-      <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-[200px_1fr] gap-8">
-          <div>
-            <span className={`text-3xl font-light ${labelColor}`}>{label}</span>
-            <h3 className="font-bold text-lg mt-2">{title}</h3>
-          </div>
-          <ul className="space-y-5">
-            {items.map((item, i) => (
-              <li key={i} className={`${mutedColor} font-light leading-relaxed flex gap-4`}>
-                <span className={`text-xs ${labelColor} mt-1.5 shrink-0 tabular-nums font-medium`}>
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default async function CasePage({
   params,
 }: {
@@ -79,10 +35,10 @@ export default async function CasePage({
   const next = idx < cases.length - 1 ? cases[idx + 1] : null;
 
   return (
-    <article className="pt-28 pb-0">
-      {/* Header */}
-      <div className="px-6 pb-16">
-        <div className="max-w-6xl mx-auto">
+    <article className="pt-28">
+      {/* ── Header ── */}
+      <div className="px-6 pb-20">
+        <div className="max-w-4xl mx-auto">
           <Link
             href="/#work"
             className="inline-flex items-center gap-2 text-sm text-muted font-light hover:text-foreground transition-colors mb-16 group"
@@ -93,66 +49,119 @@ export default async function CasePage({
             Все проекты
           </Link>
 
-          <div className="max-w-3xl mb-12">
-            <p className="text-sm text-muted font-light mb-4">{cs.domain} — {cs.role}</p>
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">{cs.title}</h1>
-            <p className="text-lg text-muted font-light leading-relaxed">{cs.subtitle}</p>
-          </div>
+          <p className="text-sm text-muted font-light mb-4">{cs.domain}</p>
+          <h1 className="text-4xl md:text-6xl font-bold leading-[1.05] mb-6">{cs.title}</h1>
+          <p className="text-xl text-muted font-light leading-relaxed max-w-2xl">{cs.subtitle}</p>
 
-          {/* Meta */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {/* Meta row */}
+          <div className="flex flex-wrap gap-x-8 gap-y-2 mt-10 pt-8 border-t border-border">
             {[
               { label: "Роль", value: cs.role },
               { label: "Период", value: cs.timeline },
               { label: "Компания", value: cs.company },
-              { label: "Домен", value: cs.domain },
             ].map((m) => (
-              <div key={m.label} className="bg-card p-5 rounded-2xl border border-border">
-                <span className="text-xs text-muted font-light">{m.label}</span>
-                <div className="font-medium mt-1 text-sm">{m.value}</div>
+              <div key={m.label} className="flex items-baseline gap-2">
+                <span className="text-xs text-muted font-light uppercase tracking-wider">{m.label}</span>
+                <span className="text-sm font-medium">{m.value}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Context — surface bg */}
-      <div className="bg-surface px-6 py-16">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-[200px_1fr] gap-8">
-            <div>
-              <span className="text-3xl font-light text-muted/25">00</span>
-              <h3 className="font-bold text-lg mt-2">Контекст</h3>
-            </div>
-            <p className="text-muted font-light leading-relaxed text-lg">{cs.sections.context}</p>
+      {/* ── Context ── */}
+      <div className="px-6 py-16 bg-card">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-lg leading-relaxed text-muted font-light">
+            {cs.sections.context}
+          </p>
+        </div>
+      </div>
+
+      {/* ── Problem ── */}
+      <div className="px-6 py-20">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-baseline gap-4 mb-10">
+            <span className="text-5xl font-bold text-border">01</span>
+            <h2 className="text-2xl font-bold">Проблема</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            {cs.sections.problem.map((item, i) => (
+              <div key={i} className="p-6 bg-card rounded-2xl border border-border">
+                <p className="text-sm font-light leading-relaxed text-muted">{item}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Problem — white */}
-      <SectionBlock label="01" title="Проблема" items={cs.sections.problem} variant="default" />
+      {/* ── Process ── dark */}
+      <div className="px-6 py-20 bg-dark text-dark-text">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-baseline gap-4 mb-10">
+            <span className="text-5xl font-bold text-white/10">02</span>
+            <h2 className="text-2xl font-bold">Процесс</h2>
+          </div>
+          <div className="space-y-0">
+            {cs.sections.process.map((item, i) => (
+              <div key={i} className="flex gap-6 py-5 border-b border-white/10 last:border-0">
+                <span className="text-accent font-bold text-sm mt-0.5 shrink-0">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <p className="font-light leading-relaxed text-dark-text/70">{item}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-      {/* Process — dark */}
-      <SectionBlock label="02" title="Процесс" items={cs.sections.process} variant="dark" />
+      {/* ── Solution ── */}
+      <div className="px-6 py-20">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-baseline gap-4 mb-10">
+            <span className="text-5xl font-bold text-border">03</span>
+            <h2 className="text-2xl font-bold">Решение</h2>
+          </div>
+          <div className="space-y-4">
+            {cs.sections.solution.map((item, i) => (
+              <div key={i} className="flex gap-5 items-start">
+                <div className="w-2 h-2 rounded-full bg-accent mt-2 shrink-0" />
+                <p className="font-light leading-relaxed text-muted">{item}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-      {/* Solution — surface */}
-      <SectionBlock label="03" title="Решение" items={cs.sections.solution} variant="surface" />
+      {/* ── Impact ── accent bg */}
+      <div className="px-6 py-20 bg-accent-light">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-baseline gap-4 mb-10">
+            <span className="text-5xl font-bold text-accent/15">04</span>
+            <h2 className="text-2xl font-bold">Результат</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            {cs.sections.impact.map((item, i) => (
+              <div key={i} className="p-6 bg-card rounded-2xl">
+                <p className="text-sm font-light leading-relaxed">{item}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-      {/* Impact — white */}
-      <SectionBlock label="04" title="Результат" items={cs.sections.impact} variant="default" />
-
-      {/* Nav */}
-      <div className="px-6 py-16 bg-background">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-4">
+      {/* ── Nav ── */}
+      <div className="px-6 py-16 bg-card border-t border-border">
+        <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-4">
           {prev ? (
-            <Link href={`/cases/${prev.slug}`} className="group p-6 rounded-2xl bg-card border border-border hover:border-accent/30 transition-colors">
-              <span className="block text-xs text-muted font-light mb-2">Предыдущий</span>
+            <Link href={`/cases/${prev.slug}`} className="group p-6 rounded-2xl border border-border hover:border-accent/30 transition-colors">
+              <span className="block text-xs text-muted font-light mb-2">← Предыдущий</span>
               <span className="font-bold group-hover:text-accent transition-colors">{prev.title}</span>
             </Link>
           ) : <div />}
           {next ? (
             <Link href={`/cases/${next.slug}`} className="group p-6 rounded-2xl bg-dark text-dark-text hover:bg-dark/90 transition-colors md:text-right">
-              <span className="block text-xs font-light opacity-50 mb-2">Следующий</span>
+              <span className="block text-xs font-light opacity-50 mb-2">Следующий →</span>
               <span className="font-bold">{next.title}</span>
             </Link>
           ) : <div />}
