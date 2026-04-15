@@ -76,25 +76,6 @@ export default async function CasePage({
         </div>
       </div>
 
-      {/* Hero image placeholder */}
-      <div className="px-6 mb-16">
-        <div
-          className="max-w-6xl mx-auto h-64 md:h-96 rounded-2xl flex items-center justify-center relative overflow-hidden"
-          style={{
-            background: `linear-gradient(135deg, ${cs.color}10 0%, ${cs.color}05 40%, ${cs.color}15 100%)`,
-            border: `1px solid ${cs.color}10`,
-          }}
-        >
-          {/* Decorative UI elements */}
-          <div className="flex gap-4 items-end">
-            <div className="w-48 h-32 rounded-xl bg-white/60 shadow-sm hidden md:block" />
-            <div className="w-32 h-44 rounded-xl bg-white/80 shadow-sm" />
-            <div className="w-48 h-36 rounded-xl bg-white/60 shadow-sm hidden md:block" />
-          </div>
-          <p className="absolute bottom-4 right-6 text-xs text-muted/40 font-light">Скриншоты скоро</p>
-        </div>
-      </div>
-
       {/* Meta */}
       <div className="px-6 mb-16">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
