@@ -21,21 +21,46 @@ export async function generateMetadata({
   };
 }
 
-function SectionBlock({ label, title, items }: { label: string; title: string; items: string[] }) {
+function SectionBlock({
+  label,
+  title,
+  items,
+  variant = "default",
+}: {
+  label: string;
+  title: string;
+  items: string[];
+  variant?: "default" | "dark" | "surface";
+}) {
+  const bg = variant === "dark"
+    ? "bg-dark text-dark-text"
+    : variant === "surface"
+    ? "bg-surface"
+    : "bg-card";
+
+  const mutedColor = variant === "dark" ? "text-dark-text/50" : "text-muted";
+  const labelColor = variant === "dark" ? "text-dark-text/20" : "text-muted/25";
+
   return (
-    <div className="grid md:grid-cols-[200px_1fr] gap-6 py-12 border-t border-border">
-      <div>
-        <span className="font-light text-muted/30 text-lg">{label}</span>
-        <h3 className="font-medium mt-1">{title}</h3>
+    <div className={`${bg} px-6 py-16`}>
+      <div className="max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-[200px_1fr] gap-8">
+          <div>
+            <span className={`text-3xl font-light ${labelColor}`}>{label}</span>
+            <h3 className="font-bold text-lg mt-2">{title}</h3>
+          </div>
+          <ul className="space-y-5">
+            {items.map((item, i) => (
+              <li key={i} className={`${mutedColor} font-light leading-relaxed flex gap-4`}>
+                <span className={`text-xs ${labelColor} mt-1.5 shrink-0 tabular-nums font-medium`}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <ul className="space-y-4">
-        {items.map((item, i) => (
-          <li key={i} className="text-muted font-light leading-relaxed flex gap-4">
-            <span className="text-xs text-muted/50 mt-1 shrink-0 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
-            {item}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
@@ -54,9 +79,9 @@ export default async function CasePage({
   const next = idx < cases.length - 1 ? cases[idx + 1] : null;
 
   return (
-    <article className="pt-28 pb-20">
+    <article className="pt-28 pb-0">
       {/* Header */}
-      <div className="px-6">
+      <div className="px-6 pb-16">
         <div className="max-w-6xl mx-auto">
           <Link
             href="/#work"
@@ -73,48 +98,52 @@ export default async function CasePage({
             <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">{cs.title}</h1>
             <p className="text-lg text-muted font-light leading-relaxed">{cs.subtitle}</p>
           </div>
-        </div>
-      </div>
 
-      {/* Meta */}
-      <div className="px-6 mb-16">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { label: "Роль", value: cs.role },
-            { label: "Период", value: cs.timeline },
-            { label: "Компания", value: cs.company },
-            { label: "Домен", value: cs.domain },
-          ].map((m) => (
-            <div key={m.label} className="bg-card p-5 rounded-2xl border border-border">
-              <span className="text-xs text-muted font-light">{m.label}</span>
-              <div className="font-medium mt-1 text-sm">{m.value}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="px-6">
-        <div className="max-w-6xl mx-auto">
-          {/* Context */}
-          <div className="grid md:grid-cols-[200px_1fr] gap-6 py-12 border-t border-border">
-            <div>
-              <span className="font-light text-muted/30 text-lg">00</span>
-              <h3 className="font-medium mt-1">Контекст</h3>
-            </div>
-            <p className="text-muted font-light leading-relaxed">{cs.sections.context}</p>
+          {/* Meta */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { label: "Роль", value: cs.role },
+              { label: "Период", value: cs.timeline },
+              { label: "Компания", value: cs.company },
+              { label: "Домен", value: cs.domain },
+            ].map((m) => (
+              <div key={m.label} className="bg-card p-5 rounded-2xl border border-border">
+                <span className="text-xs text-muted font-light">{m.label}</span>
+                <div className="font-medium mt-1 text-sm">{m.value}</div>
+              </div>
+            ))}
           </div>
-
-          <SectionBlock label="01" title="Проблема" items={cs.sections.problem} />
-          <SectionBlock label="02" title="Процесс" items={cs.sections.process} />
-          <SectionBlock label="03" title="Решение" items={cs.sections.solution} />
-          <SectionBlock label="04" title="Результат" items={cs.sections.impact} />
         </div>
       </div>
+
+      {/* Context — surface bg */}
+      <div className="bg-surface px-6 py-16">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-[200px_1fr] gap-8">
+            <div>
+              <span className="text-3xl font-light text-muted/25">00</span>
+              <h3 className="font-bold text-lg mt-2">Контекст</h3>
+            </div>
+            <p className="text-muted font-light leading-relaxed text-lg">{cs.sections.context}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Problem — white */}
+      <SectionBlock label="01" title="Проблема" items={cs.sections.problem} variant="default" />
+
+      {/* Process — dark */}
+      <SectionBlock label="02" title="Процесс" items={cs.sections.process} variant="dark" />
+
+      {/* Solution — surface */}
+      <SectionBlock label="03" title="Решение" items={cs.sections.solution} variant="surface" />
+
+      {/* Impact — white */}
+      <SectionBlock label="04" title="Результат" items={cs.sections.impact} variant="default" />
 
       {/* Nav */}
-      <div className="px-6 mt-20">
-        <div className="max-w-6xl mx-auto pt-8 border-t border-border grid md:grid-cols-2 gap-4">
+      <div className="px-6 py-16 bg-background">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-4">
           {prev ? (
             <Link href={`/cases/${prev.slug}`} className="group p-6 rounded-2xl bg-card border border-border hover:border-accent/30 transition-colors">
               <span className="block text-xs text-muted font-light mb-2">Предыдущий</span>
@@ -122,7 +151,7 @@ export default async function CasePage({
             </Link>
           ) : <div />}
           {next ? (
-            <Link href={`/cases/${next.slug}`} className="group p-6 rounded-2xl bg-dark text-dark-text hover:bg-dark/90 transition-colors text-right">
+            <Link href={`/cases/${next.slug}`} className="group p-6 rounded-2xl bg-dark text-dark-text hover:bg-dark/90 transition-colors md:text-right">
               <span className="block text-xs font-light opacity-50 mb-2">Следующий</span>
               <span className="font-bold">{next.title}</span>
             </Link>
